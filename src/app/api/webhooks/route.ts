@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import prisma from "../../../../prisma/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { headers } from "next/headers"
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 	// https://github.com/stripe/stripe-node#configuration
@@ -12,7 +13,7 @@ const webhookSecret: string = process.env.STRIPE_WEBHOOK_SECRET!;
 const webhookHandler = async (req: NextRequest) => {
 	try {
 		const buf = await req.text();
-		const sig = req.headers.get("stripe-signature")!;
+		const sig = headers().get("Stripe-Signature") as string
 
 		let event: Stripe.Event;
 
